@@ -9,6 +9,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 // importing routes
 import healthCentreRoute from "./routes/healthCareRoute";
 import userRoute from "./routes/usersRoute";
+import newBoneRoute from "./routes/newBorn";
 
 import { Sequelize } from "sequelize";
 dotenv.config();
@@ -71,6 +72,8 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // Require app to use imported routes
 app.use("/DataCollection/API",healthCentreRoute);
 app.use("/DataCollection/API",userRoute);
+app.use("/DataCollection/API",newBoneRoute);
+
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "200",

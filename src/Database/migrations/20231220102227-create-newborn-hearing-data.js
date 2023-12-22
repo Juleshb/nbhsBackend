@@ -50,7 +50,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       ageOfNewborn: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       sex: {
         type: Sequelize.STRING
@@ -59,10 +59,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       APGARSCOREAtBirth: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       weightAtBirth: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
       },
       neonatalInfectionRisk: {
         type: Sequelize.STRING
@@ -92,7 +92,9 @@ module.exports = {
       ABRScale: {
         type: Sequelize.STRING
       },
-
+      generatedCode:{ 
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
