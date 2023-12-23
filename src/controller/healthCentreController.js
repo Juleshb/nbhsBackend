@@ -111,6 +111,13 @@ export const updateHealthCentre = async(req,res) =>{
               }
             };
           }
+    const user = await HealthCentres.findByPk(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        status: "404",
+        message: "Health centre not found",
+      });
+    }
     const values = {
         name,
         provence,

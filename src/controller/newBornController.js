@@ -15,7 +15,7 @@ export const addNewBorn = async (req, res) => {
     const bornIn = req.loggedInUser.HealthCentre;
     const currentDate = new Date().toISOString().slice(0, 10);
     latestNumber++;
-    const formattedNumber = padWithZeros(latestNumber, 3);
+    const formattedNumber = padWithZeros(latestNumber, 5);
     const newBornId = formattedNumber;
 
     const {
@@ -88,4 +88,132 @@ export const addNewBorn = async (req, res) => {
 
 function padWithZeros(number, length) {
   return number.toString().padStart(length, '0');
+};
+
+
+export const viewNewBorns = async (req,res) =>{
+  try {
+    const getBorns = await NewBorns.findAll({});
+        return res.status(201).json({
+            status: "201",
+            message: "New borns retrieved successfully",
+            data: getBorns,
+        })
+    
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      console.error("Validation errors:", error.errors);
+    } else {
+      console.error("Unhandled error:", error);
+    }
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to retreive data",
+      error: error.message,
+    });
+  }
 }
+
+export const getSingleNewBorn = async (req,res) =>{
+  try {
+      const {id} = req.params;
+      const getNewBorn = await NewBorns.findByPk(id);
+      if(!getNewBorn){
+          return res.status(404).json({
+              status: "404",
+              message: "New born not found",
+            });
+      }
+          return res.status(200).json({
+              status: "200",
+              message: "A new born retrieved successfully",
+              data: getNewBorn,
+            });
+  
+      
+  } catch (error) {
+      if(error.name === "SequelizeValidationError"){
+          console.log("Validation error:" ,error.errors);
+        }else{
+          console.log("Unhandled error:",error);
+        }
+        return res.status(500).json({
+          status: "500",
+          message: "Failed to retrieve a new born",
+          error: error.message,
+        });
+  }
+};
+
+export const updateNewBorn = async(req,res) =>{
+  const {id} = req.params;
+  try {
+    const {
+      motherName,
+      fatherName,
+      maritalStatus,
+      phoneContact,
+      province,
+      district,
+      dateOfBirth,
+      ageOfNewborn,
+      sex,
+      modeOfDelivery,
+      APGARSCOREAtBirth,
+      weightAtBirth,
+      neonatalInfectionRisk,
+      maternalSevereDisease,
+      historyOfMaternalAlcoholUseAndSmoking,
+      maternalExplosureToOtotoxicDrugs,
+      newbornPositionInTheFamily,
+      presenceOfEarDysmorphism,
+      historyOfHearingLossAmongFamilyMembers,
+      ABRScale,
+    } = req.body;
+    const newBon = await NewBorns.findByPk(req.params.id);
+    if (!newBon) {
+      return res.status(404).json({
+        status: "404",
+        message: "New born not found",
+      });
+    }
+  const values = {
+    motherName,
+    fatherName,
+    maritalStatus,
+    phoneContact,
+    province,
+    district,
+    dateOfBirth,
+    ageOfNewborn,
+    sex,
+    modeOfDelivery,
+    APGARSCOREAtBirth,
+    weightAtBirth,
+    neonatalInfectionRisk,
+    maternalSevereDisease,
+    historyOfMaternalAlcoholUseAndSmoking,
+    maternalExplosureToOtotoxicDrugs,
+    newbornPositionInTheFamily,
+    presenceOfEarDysmorphism,
+    historyOfHearingLossAmongFamilyMembers,
+    ABRScale,
+    };
+    const update = await NewBorns.update(values, {where:{id:id}});
+    return res.status(200).json({
+      status:"200",
+      message:"New born updated",
+    })
+  } catch (error) {
+      if (error.name === "SequelizeValidationError") {
+          console.error("Validation errors:", error.errors);
+        } else {
+          console.error("Unhandled error:", error);
+        }
+        return res.status(500).json({
+          status: "500",
+          message: "Failed to update new born",
+          error: error.message,
+        });
+  }
+};
