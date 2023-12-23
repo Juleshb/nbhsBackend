@@ -170,11 +170,25 @@ export const updateNewBorn = async(req,res) =>{
       historyOfHearingLossAmongFamilyMembers,
       ABRScale,
     } = req.body;
-    const newBon = await NewBorns.findByPk(req.params.id);
-    if (!newBon) {
+    const existingNewBorn = await NewBorns.findByPk(id);
+
+    if (!existingNewBorn) {
       return res.status(404).json({
         status: "404",
         message: "New born not found",
+      });
+    }
+
+    // Check if the update is within 24 hours
+    const currentTime = new Date();
+    const creationTime = new Date(existingNewBorn.createdAt);
+    const timeDifference = currentTime - creationTime;
+    const hoursDifference = timeDifference / (1000 * 60 * 60); // Convert milliseconds to hours
+
+    if (hoursDifference > 24) {
+      return res.status(403).json({
+        status: "403",
+        message: "Update not allowed after 24 hours",
       });
     }
   const values = {
