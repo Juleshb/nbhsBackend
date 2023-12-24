@@ -54,7 +54,7 @@ export const admins = async (req, res, next) => {
 
 // Nurse autholisation
 
-export const nurses = async (req, res, next) => {
+export const normal = async (req, res, next) => {
   let token;
 
   try {
@@ -80,11 +80,6 @@ export const nurses = async (req, res, next) => {
         status: "403",
         message: "Token has expired. Please, login again",
       });
-    } if (loggedInUser.role !== "nurse") {
-      res.status(401).json({
-        status: "401",
-        message: "Only nurse can do this operation",
-      });
     } else {
       req.loggedInUser = loggedInUser;
       next();
@@ -98,7 +93,7 @@ export const nurses = async (req, res, next) => {
   }
 };
 
-// Nurse autholisation
+// Ideologist autholisation
 
 export const ideologist = async (req, res, next) => {
   let token;

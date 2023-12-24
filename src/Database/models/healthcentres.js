@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     provence: DataTypes.STRING,
     district: DataTypes.STRING,
+    HealthCentreCode: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'HealthCentres',

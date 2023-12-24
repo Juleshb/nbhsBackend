@@ -18,6 +18,9 @@ module.exports = {
       district: {
         type: Sequelize.STRING
       },
+      HealthCentreCode:{
+        type: Sequelize.STRING
+      },
       type: {
         type: Sequelize.STRING,
         defaultValue: "hospital",

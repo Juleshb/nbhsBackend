@@ -1,7 +1,7 @@
 import express from "express";
 
 import fileUpload from "../helper/multer";
-import { nurses } from "../middleware/Authentication";
+import { normal } from "../middleware/Authentication";
 import { 
     addNewBorn,
     updateNewBorn,
@@ -10,10 +10,10 @@ import {
  } from "../controller/newBornController";
 
  const newBoneRoute = express.Router();
- newBoneRoute.post("/newBorns/add",nurses,fileUpload.single("sex"),addNewBorn);
- newBoneRoute.put("/newBorns/update/:id",nurses,fileUpload.single("sex"),updateNewBorn);
- newBoneRoute.get("/newBorns/getSingle/:id",nurses,getSingleNewBorn);
- newBoneRoute.get("/newBorns/getAll",nurses,viewNewBorns);
+ newBoneRoute.post("/newBorns/add",normal,fileUpload.single("sex"),addNewBorn);
+ newBoneRoute.put("/newBorns/update/:id",normal,fileUpload.single("sex"),updateNewBorn);
+ newBoneRoute.get("/newBorns/getSingle/:id",normal,getSingleNewBorn);
+ newBoneRoute.get("/newBorns/getAll",normal,viewNewBorns);
 
 
  export default newBoneRoute;

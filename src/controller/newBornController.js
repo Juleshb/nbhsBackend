@@ -1,6 +1,7 @@
 import Database from "../Database/models";
 import { v4 as uuidv4 } from 'uuid';
 const NewBorns = Database["NewBorns"];
+const HealthCentres = Database["HealthCentres"]
 
 // Function to generate a random code
 const generateRandomCode = (healthCareId, date, newBornId) => {
@@ -13,6 +14,11 @@ export const addNewBorn = async (req, res) => {
   try {
     const nurseId = req.loggedInUser.id;
     const bornIn = req.loggedInUser.HealthCentre;
+    const getAll = await HealthCentres.findOne({where:{id:bornIn},
+      attributes: ['HealthCentreCode'],});
+      // Extract the healthCentreCode from the query result
+    const healthCentreCode = getAll ? getAll.HealthCentreCode : null;
+
     const currentDate = new Date().toISOString().slice(0, 10);
     latestNumber++;
     const formattedNumber = padWithZeros(latestNumber, 5);
@@ -64,7 +70,7 @@ export const addNewBorn = async (req, res) => {
       historyOfHearingLossAmongFamilyMembers,
       ABRScale,
       midwife: nurseId,
-      generatedCode: generateRandomCode(bornIn, currentDate, newBornId),
+      generatedCode: generateRandomCode(healthCentreCode, currentDate, newBornId),
     });
 
     return res.status(200).json({
@@ -178,18 +184,21 @@ export const updateNewBorn = async(req,res) =>{
         message: "New born not found",
       });
     }
+    const loggedInUserRole = req.loggedInUser.role; 
+     const isNurse = loggedInUserRole === "nurse";
 
-    // Check if the update is within 24 hours
-    const currentTime = new Date();
-    const creationTime = new Date(existingNewBorn.createdAt);
-    const timeDifference = currentTime - creationTime;
-    const hoursDifference = timeDifference / (1000 * 60 * 60); // Convert milliseconds to hours
+    if (isNurse) {
+      const currentTime = new Date();
+      const creationTime = new Date(existingNewBorn.createdAt);
+      const timeDifference = currentTime - creationTime;
+      const hoursDifference = timeDifference / (1000 * 60 * 60);
 
-    if (hoursDifference > 24) {
-      return res.status(403).json({
-        status: "403",
-        message: "Update not allowed after 24 hours",
-      });
+      if (hoursDifference > 24) {
+        return res.status(403).json({
+          status: "403",
+          message: "Update not allowed after 24 hours",
+        });
+      }
     }
   const values = {
     motherName,

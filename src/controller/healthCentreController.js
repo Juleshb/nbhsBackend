@@ -1,8 +1,19 @@
 import Database from "../Database/models";
 const HealthCentres = Database["HealthCentres"];
 
+
+let latestNumber = 0;
+// Function to generate a random code
+const generateRandomCode = (healthCentreCode) => {
+  return `${healthCentreCode}`;
+};
+
+
 export const addHealthCentre = async (req,res) =>{
     try {
+      latestNumber++;
+    const formattedNumber = padWithZeros(latestNumber, 3);
+    const healthCentreCode = formattedNumber;
         const {name,provence,district} = req.body;
         const checkHealthCentre = await HealthCentres.findOne({where:{name:req.body.name}});
         if (checkHealthCentre){
@@ -15,6 +26,7 @@ export const addHealthCentre = async (req,res) =>{
             name,
             provence,
             district,
+            HealthCentreCode: generateRandomCode(healthCentreCode),
         });
         return res.status(201).json({
             status: "201",
@@ -33,6 +45,9 @@ export const addHealthCentre = async (req,res) =>{
             error: error.message,
           });
     }
+};
+function padWithZeros(number, length) {
+  return number.toString().padStart(length, '0');
 };
 
 //getting Institutions
