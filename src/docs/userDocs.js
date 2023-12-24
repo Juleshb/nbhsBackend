@@ -29,7 +29,7 @@
  *           type: integer
  *           description: The ID of the health centre where the user works.
  *
- * /users/register:
+ * /DataCollection/API/users/register:
  *   post:
  *     summary: Register a new user.
  *     tags:
@@ -101,7 +101,7 @@
 
 /**
  * @swagger
- * /users/login:
+ * /DataCollection/API/users/login:
  *   post:
  *     summary: Log in a user.
  *     tags:
@@ -161,7 +161,7 @@
 
 /**
  * @swagger
- * /users/update/{id}:
+ * /DataCollection/API/users/update/{id}:
  *   put:
  *     summary: Update a user by ID.
  *     tags:
@@ -245,7 +245,7 @@
 
 /**
  * @swagger
- * /users/getall:
+ * /DataCollection/API/users/getall:
  *   get:
  *     summary: Get all users.
  *     tags:
@@ -305,7 +305,7 @@
 
 /**
  * @swagger
- * /users/get/single/{id}:
+ * /DataCollection/API/users/get/single/{id}:
  *   get:
  *     summary: Get a single user by ID.
  *     tags:
@@ -377,7 +377,7 @@
 
 /**
  * @swagger
- * /users/delete/{id}:
+ * /DataCollection/API/users/delete/{id}:
  *   delete:
  *     summary: Delete a user by ID.
  *     tags:

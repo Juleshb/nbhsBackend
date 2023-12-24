@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /healthcentre/add:
+ * /DataCollection/API/healthcentre/add:
  *   post:
  *     summary: Add a new HealthCentre.
  *     tags:
@@ -85,7 +85,7 @@
 
 /**
  * @swagger
- * /healthcentre/update/{id}:
+ * /DataCollection/API/healthcentre/update/{id}:
  *   put:
  *     summary: Update a HealthCentre.
  *     tags:
@@ -144,7 +144,7 @@
 
 /**
  * @swagger
- * /healthcentre/getall:
+ * /DataCollection/API/healthcentre/getall:
  *   get:
  *     summary: Get all HealthCentres.
  *     tags:
@@ -182,7 +182,7 @@
 
 /**
  * @swagger
- * /healthcentre/getsingle/{id}:
+ * /DataCollection/API/healthcentre/getsingle/{id}:
  *   get:
  *     summary: Get a single HealthCentre by ID.
  *     tags:
@@ -229,7 +229,7 @@
 
 /**
  * @swagger
- * /healthcentre/delete/{id}:
+ * /DataCollection/API/healthcentre/delete/{id}:
  *   delete:
  *     summary: Delete a HealthCentre by ID.
  *     tags:
