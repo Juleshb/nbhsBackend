@@ -4,7 +4,7 @@
   "description": "Datacollection",
   "main": "index.js",
   "scripts": {
-    "crateseeder": "npx sequelize-cli seed:generate --name demo-user",
+    "crateseeder": "npx sequelize-cli seed:generate --name demo-Users",
     "executeseeder": "npx sequelize-cli db:seed:all",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build/src/ ./src/ -s",
@@ -14,7 +14,7 @@
     "start": "nodemon --exec babel-node ./src/index.js",
     "undomigrate": "npx sequelize-cli db:migrate:undo:all",
     "migrate": "sequelize db:migrate",
-    "createmodel": "npx sequelize-cli model:generate --name NewBorns --attributes motherName:string,fatherName:string,maritalStatus:string,phoneContact:string,province:string"
+    "createmodel": "npx sequelize-cli model:generate --name Drafts --attributes motherName:string,fatherName:string,maritalStatus:string,phoneContact:string,province:string"
   },
   "author": "Alexis",
   "license": "ISC",

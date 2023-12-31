@@ -24,7 +24,6 @@ module.exports = {
       pin: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
       type: {
         type: Sequelize.STRING,

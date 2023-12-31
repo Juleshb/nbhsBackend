@@ -124,7 +124,7 @@ export const ideologist = async (req, res, next) => {
     } if (loggedInUser.role !== "ideologist") {
       res.status(401).json({
         status: "401",
-        message: "Only nurse can do this operation",
+        message: "Only ideologist can do this operation",
       });
     } else {
       req.loggedInUser = loggedInUser;
