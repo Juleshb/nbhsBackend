@@ -12,7 +12,7 @@ let latestNumber = 0;
 
 export const addNewBorn = async (req, res) => {
   try {
-    const nurseId = req.loggedInUser.id;
+    const userId = req.loggedInUser.id;
     const bornIn = req.loggedInUser.HealthCentre;
     const getAll = await HealthCentres.findOne({where:{id:bornIn},
       attributes: ['HealthCentreCode'],});
@@ -69,7 +69,7 @@ export const addNewBorn = async (req, res) => {
       presenceOfEarDysmorphism,
       historyOfHearingLossAmongFamilyMembers,
       OAEResult,
-      midwife: nurseId,
+      recordedBy: userId,
       generatedCode: generateRandomCode(healthCentreCode, currentDate, newBornId),
     });
 

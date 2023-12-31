@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 				as: "worksIn"
 			});
       Users.hasMany(models.NewBorns, {
-        foreignKey: 'midwife',
+        foreignKey: 'recordedBy',
         });
     }
   }

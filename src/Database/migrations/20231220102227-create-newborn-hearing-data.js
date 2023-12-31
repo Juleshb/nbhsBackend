@@ -37,7 +37,7 @@ module.exports = {
           as: 'HealthCentre'
         }
       },
-      midwife: {
+      recordedBy: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         onUpdate: "CASCADE",

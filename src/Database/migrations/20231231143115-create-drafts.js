@@ -8,8 +8,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      motherName: {
+      },motherName: {
         type: Sequelize.STRING
       },
       fatherName: {
@@ -22,6 +21,77 @@ module.exports = {
         type: Sequelize.STRING
       },
       province: {
+        type: Sequelize.STRING
+      },
+      district: {
+        type: Sequelize.STRING
+      },
+      HealthCentre: {
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        references: {
+           model: 'Users',
+          key: 'id', 
+          as: 'HealthCentre'
+        }
+      },
+      recordedBy: {
+        type: Sequelize.INTEGER,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        references: {
+           model: 'Users',
+          key: 'id', 
+        }
+      },
+      dateOfBirth: {
+        type: Sequelize.DATE
+      },
+      ageOfNewborn: {
+        type: Sequelize.INTEGER
+      },
+      sex: {
+        type: Sequelize.STRING
+      },
+      modeOfDelivery: {
+        type: Sequelize.STRING
+      },
+      APGARSCOREAtBirth: {
+        type: Sequelize.INTEGER
+      },
+      weightAtBirth: {
+        type: Sequelize.INTEGER
+      },
+      neonatalInfectionRisk: {
+        type: Sequelize.STRING
+      },
+
+      maternalSevereDisease: {
+        type: Sequelize.STRING
+      },
+      historyOfMaternalAlcoholUseAndSmoking: {
+        type: Sequelize.STRING
+      },
+      maternalExplosureToOtotoxicDrugs: {
+        type: Sequelize.STRING
+      },
+      newbornPositionInTheFamily: {
+        type: Sequelize.STRING
+      },
+      presenceOfEarDysmorphism: {
+        type: Sequelize.STRING
+      },
+      historyOfHearingLossAmongFamilyMembers: {
+        type: Sequelize.STRING
+      },
+      OAEResult: {
+        type: Sequelize.STRING
+      },
+      ABRScale: {
+        type: Sequelize.STRING
+      },
+      generatedCode:{ 
         type: Sequelize.STRING
       },
       createdAt: {
