@@ -11,7 +11,7 @@
     "build": "npm run build-babel",
     "start-And-migration": "npm run migrate && npm start",
     "start-undomigrate": "npm run undomigrate && npm start",
-    "start": "nodemon --exec babel-node ./src/index.js",
+    "start": "npx sequelize-cli db:seed:all && nodemon --exec babel-node ./src/index.js",
     "undomigrate": "npx sequelize-cli db:migrate:undo:all",
     "migrate": "sequelize db:migrate",
     "createmodel": "npx sequelize-cli model:generate --name Drafts --attributes motherName:string,fatherName:string,maritalStatus:string,phoneContact:string,province:string"

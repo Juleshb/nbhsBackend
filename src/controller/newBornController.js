@@ -1,22 +1,22 @@
 import Database from "../Database/models";
-import { v4 as uuidv4 } from 'uuid';
 const NewBorns = Database["NewBorns"];
+const Drafts = Database["Drafts"];
 const HealthCentres = Database["HealthCentres"]
 
-// Function to generate a random code
 const generateRandomCode = (healthCareId, date, newBornId) => {
   return `${healthCareId}-${date}-${newBornId}`;
 };
 
 let latestNumber = 0;
-
 export const addNewBorn = async (req, res) => {
   try {
     const userId = req.loggedInUser.id;
     const bornIn = req.loggedInUser.HealthCentre;
-    const getAll = await HealthCentres.findOne({where:{id:bornIn},
-      attributes: ['HealthCentreCode'],});
-      // Extract the healthCentreCode from the query result
+    const getAll = await HealthCentres.findOne({
+      where: { id: bornIn },
+      attributes: ['HealthCentreCode'],
+    });
+
     const healthCentreCode = getAll ? getAll.HealthCentreCode : null;
 
     const currentDate = new Date().toISOString().slice(0, 10);
@@ -47,37 +47,128 @@ export const addNewBorn = async (req, res) => {
       OAEResult,
     } = req.body;
 
-    const createBorn = await NewBorns.create({
-      motherName,
-      fatherName,
-      maritalStatus,
-      phoneContact,
-      province,
-      district,
-      dateOfBirth,
-      ageOfNewborn,
-      maternalExplosureToOtotoxicDrugs,
-      maternalSevereDisease,
-      historyOfMaternalAlcoholUseAndSmoking,
-      sex,
-      modeOfDelivery,
-      APGARSCOREAtBirth,
-      weightAtBirth,
-      newbornPositionInTheFamily,
-      HealthCentre: bornIn,
-      neonatalInfectionRisk,
-      presenceOfEarDysmorphism,
-      historyOfHearingLossAmongFamilyMembers,
-      OAEResult,
-      recordedBy: userId,
-      generatedCode: generateRandomCode(healthCentreCode, currentDate, newBornId),
-    });
+    if (
+      !motherName ||
+      !fatherName ||
+      !maritalStatus ||
+      !phoneContact ||
+      !province ||
+      !district ||
+      !dateOfBirth ||
+      !ageOfNewborn ||
+      !sex ||
+      !APGARSCOREAtBirth ||
+      !weightAtBirth ||
+      !neonatalInfectionRisk ||
+      !maternalSevereDisease ||
+      !historyOfMaternalAlcoholUseAndSmoking ||
+      !maternalExplosureToOtotoxicDrugs ||
+      !newbornPositionInTheFamily ||
+      !presenceOfEarDysmorphism ||
+      !historyOfHearingLossAmongFamilyMembers ||
+      !OAEResult ||
+      !modeOfDelivery
+    ) {
+      return res.status(400).json({
+        status: "400",
+        message: "All fields are required.",
+      });
+    }
 
-    return res.status(200).json({
-      status: "200",
-      message: "New born added",
-      data: createBorn,
+    const checkExistingDraft = await Drafts.findOne({ where: { recordedBy: userId } });
+
+if (checkExistingDraft) {
+  // Check for null values in the draft record
+  const draftData = checkExistingDraft.dataValues;
+
+  // Count the number of fields with null values
+  const nullValuesCount = Object.values(draftData).filter((value) => value === null);
+
+  if (nullValuesCount.length == 1) {
+    // Allow the user to insert into NewBorns
+    // Insert data into NewBorns table
+    try {
+      await NewBorns.create({
+        motherName: draftData.motherName,
+        fatherName: draftData.fatherName,
+        maritalStatus: draftData.maritalStatus,
+        phoneContact: draftData.phoneContact,
+        province: draftData.province,
+        district: draftData.district,
+        dateOfBirth: draftData.dateOfBirth,
+        ageOfNewborn: draftData.ageOfNewborn,
+        maternalExplosureToOtotoxicDrugs: draftData.maternalExplosureToOtotoxicDrugs,
+        maternalSevereDisease: draftData.maternalSevereDisease,
+        historyOfMaternalAlcoholUseAndSmoking: draftData.historyOfMaternalAlcoholUseAndSmoking,
+        sex: draftData.sex,
+        modeOfDelivery: draftData.modeOfDelivery,
+        APGARSCOREAtBirth: draftData.APGARSCOREAtBirth,
+        weightAtBirth: draftData.weightAtBirth,
+        newbornPositionInTheFamily: draftData.newbornPositionInTheFamily,
+        HealthCentre: draftData.HealthCentre,
+        neonatalInfectionRisk: draftData.neonatalInfectionRisk,
+        presenceOfEarDysmorphism: draftData.presenceOfEarDysmorphism,
+        historyOfHearingLossAmongFamilyMembers: draftData.historyOfHearingLossAmongFamilyMembers,
+        OAEResult: draftData.OAEResult,
+        recordedBy: userId,
+        generatedCode: draftData.generatedCode,
+      });
+
+      // Remove the record from Drafts table
+      await Drafts.destroy({ where: { recordedBy: userId } });
+
+      return res.status(200).json({
+        status: "200",
+        message: "Data successfully submitted from draft to NewBorns.",
+      });
+    } catch (error) {
+      console.error("Error inserting data into NewBorns:", error);
+      return res.status(500).json({
+        status: "500",
+        message: "Failed to insert data into NewBorns.",
+        error: error.message,
+      });
+    }
+  } else {
+    return res.status(400).json({
+      status: "400",
+      message: "Your draft record contains more than one null value. Please complete the form before submitting.",
     });
+  }
+} else {
+      // No draft found for the logged-in user, save data directly to NewBorns
+      const createBorn = await NewBorns.create({
+        motherName,
+        fatherName,
+        maritalStatus,
+        phoneContact,
+        province,
+        district,
+        dateOfBirth,
+        ageOfNewborn,
+        maternalExplosureToOtotoxicDrugs,
+        maternalSevereDisease,
+        historyOfMaternalAlcoholUseAndSmoking,
+        sex,
+        modeOfDelivery,
+        APGARSCOREAtBirth,
+        weightAtBirth,
+        newbornPositionInTheFamily,
+        HealthCentre: bornIn,
+        neonatalInfectionRisk,
+        presenceOfEarDysmorphism,
+        historyOfHearingLossAmongFamilyMembers,
+        OAEResult,
+        recordedBy: userId,
+        generatedCode: generateRandomCode(healthCentreCode, currentDate, newBornId),
+      });
+
+      return res.status(200).json({
+        status: "200",
+        message: "New born added",
+        data: createBorn,
+      });
+    }
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       console.error("Validation errors:", error.errors);
@@ -93,13 +184,14 @@ export const addNewBorn = async (req, res) => {
 };
 
 function padWithZeros(number, length) {
-  return number.toString().padStart(length, '0');
-};
+  return number.toString().padStart(length, "0");
+}
 
 
 export const viewNewBorns = async (req,res) =>{
   try {
-    const getBorns = await NewBorns.findAll({});
+    const userId = req.loggedInUser.id;
+    const getBorns = await NewBorns.findAll({where:{recordedBy:userId}});
         return res.status(201).json({
             status: "201",
             message: "New borns retrieved successfully",
@@ -123,7 +215,8 @@ export const viewNewBorns = async (req,res) =>{
 export const getSingleNewBorn = async (req,res) =>{
   try {
       const {id} = req.params;
-      const getNewBorn = await NewBorns.findByPk(id);
+    const userId = req.loggedInUser.id;
+      const getNewBorn = await NewBorns.findByPk(id,{where:{recordedBy:userId}});
       if(!getNewBorn){
           return res.status(404).json({
               status: "404",

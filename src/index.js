@@ -10,6 +10,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import healthCentreRoute from "./routes/healthCareRoute";
 import userRoute from "./routes/usersRoute";
 import newBoneRoute from "./routes/newBorn";
+import draftRoute from "./routes/draftRoute";
 
 import { Sequelize } from "sequelize";
 dotenv.config();
@@ -73,6 +74,8 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use("/DataCollection/API",healthCentreRoute);
 app.use("/DataCollection/API",userRoute);
 app.use("/DataCollection/API",newBoneRoute);
+app.use("/DataCollection/API",draftRoute);
+
 
 app.get("/", (req, res) => {
   res.status(200).json({

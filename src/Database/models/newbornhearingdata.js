@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    midwife: DataTypes.INTEGER,
+    recordedBy: DataTypes.INTEGER,
     dateOfBirth: DataTypes.DATE,
     ageOfNewborn: DataTypes.INTEGER,
     sex: DataTypes.STRING,
