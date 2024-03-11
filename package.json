@@ -16,7 +16,7 @@
     "migrate": "sequelize db:migrate",
     "createmodel": "npx sequelize-cli model:generate --name Drafts --attributes motherName:string,fatherName:string,maritalStatus:string,phoneContact:string,province:string"
   },
-  "author": "Alexis",
+  "author": "Jules",
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.23.4",
