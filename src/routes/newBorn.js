@@ -1,7 +1,7 @@
 import express from "express";
 
 import fileUpload from "../helper/multer";
-import { normal,ideologist } from "../middleware/Authentication";
+import { normal,ideologist,admins } from "../middleware/Authentication";
 import { 
     addNewBorn,
     updateNewBorn,
@@ -9,6 +9,8 @@ import {
     viewNewBorns,
     getBornsWithOAEResultOfRefer,
     updateBornWithReferOAEResult,
+    getNewBorns,
+    getBornsWithOAEResultOfReferandABRScalenotnull,
  } from "../controller/newBornController";
 
  const newBoneRoute = express.Router();
@@ -18,7 +20,9 @@ import {
  newBoneRoute.get("/newBorns/getSingle/:id",normal,getSingleNewBorn);
  newBoneRoute.get("/newBorns/getAll",normal,viewNewBorns);
  newBoneRoute.get("/newBorns/getRefers",normal,getBornsWithOAEResultOfRefer);
-
+ newBoneRoute.get("/newBorns/getAllborns",admins,getNewBorns);
+ newBoneRoute.get("/newBorns/getAllabrscale",normal,getBornsWithOAEResultOfReferandABRScalenotnull);
+//  newBoneRoute.get("/newBorns/getAllabrscale",ideologist,getBornsWithOAEResultOfReferandABRScalenotnull);
 
 
 

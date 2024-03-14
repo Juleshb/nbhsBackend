@@ -66,8 +66,7 @@ export const addNewBorn = async (req, res) => {
       !newbornPositionInTheFamily ||
       !presenceOfEarDysmorphism ||
       !historyOfHearingLossAmongFamilyMembers ||
-      !OAEResult ||
-      !modeOfDelivery
+      !OAEResult 
     ) {
       return res.status(400).json({
         status: "400",
@@ -244,6 +243,33 @@ export const getSingleNewBorn = async (req,res) =>{
   }
 };
 
+
+// Getting all borns
+
+export const getNewBorns = async (req,res) =>{
+  try {
+      const getnewBorns = await NewBorns.findAll({});
+      return res.status(201).json({
+          status: "201",
+          message: "all borns retrieved successfully",
+          data: getnewBorns,
+      })
+  } catch (error) {
+      if(error.name === "SequelizeValidationError"){
+          console.log("Validation error:" ,error.errors);
+        }else{
+          console.log("Unhandled error:",error);
+        }
+        return res.status(500).json({
+          status: "500",
+          message: "Failed to retrieve all borns",
+          error: error.message,
+        });
+      
+  }
+};
+
+
 export const updateNewBorn = async(req,res) =>{
   const {id} = req.params;
   try {
@@ -338,7 +364,7 @@ export const updateNewBorn = async(req,res) =>{
 export const getBornsWithOAEResultOfRefer = async (req,res) =>{
   const refer = "Refer";
   try {
-      const getNewBorn = await NewBorns.findAll({where:{OAEResult:refer}});
+      const getNewBorn = await NewBorns.findAll({where:{OAEResult:refer, ABRScale: null}});
           return res.status(200).json({
               status: "200",
               message: "Newborns with Refer OAE Result retrieved successfully",
@@ -359,6 +385,40 @@ export const getBornsWithOAEResultOfRefer = async (req,res) =>{
         });
   }
 };
+
+// getBornsWithOAEResultOfReferandABRScalenotnull 
+const { Op } = require('sequelize');
+export const getBornsWithOAEResultOfReferandABRScalenotnull = async (req,res) =>{
+  const refer = "Refer";
+  try {
+    const getNewBorn = await NewBorns.findAll({
+      where: {
+        OAEResult: refer,
+        ABRScale: {
+          [Op.ne]: null
+        }
+      }
+    });
+
+    return res.status(200).json({
+      status: "200",
+      message: "Newborns with Refer OAE Result and non-null ABRScale retrieved successfully",
+      data: getNewBorn,
+    });
+  } catch (error) {
+    if(error.name === "SequelizeValidationError"){
+      console.log("Validation error:" ,error.errors);
+    } else {
+      console.log("Unhandled error:",error);
+    }
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to retrieve new borns",
+      error: error.message,
+    });
+  }
+};
+
 
 //update new borns with OAE Result of Refer
 
