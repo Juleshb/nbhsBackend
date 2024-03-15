@@ -80,7 +80,7 @@ app.use("/DataCollection/API",draftRoute);
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "200",
-    author: "Alexis",
+    author: "Juleshb",
     message:"Most welcome to my API"
   })
 });
