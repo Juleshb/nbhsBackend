@@ -38,6 +38,18 @@ module.exports = (sequelize, DataTypes) => {
     weightAtBirth: DataTypes.INTEGER,
     neonatalInfectionRisk: DataTypes.STRING,
     maternalSevereDisease: DataTypes.STRING,
+    selectedmaternalDiseases: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    selectedhistoryOfMaternalAlcoholUseAndSmoking: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    selectedMaternalExplosuretoOtotoxicDrugs: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     historyOfMaternalAlcoholUseAndSmoking: DataTypes.STRING,
     maternalExplosureToOtotoxicDrugs: DataTypes.STRING,
     APGARSCOREAtBirth: DataTypes.STRING,

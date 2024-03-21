@@ -71,6 +71,20 @@ module.exports = {
       maternalSevereDisease: {
         type: Sequelize.STRING
       },
+
+      selectedmaternalDiseases: {
+        type: Sequelize.STRING
+      },
+
+      selectedhistoryOfMaternalAlcoholUseAndSmoking: {
+        type: Sequelize.STRING
+      },
+
+      selectedMaternalExplosuretoOtotoxicDrugs: {
+        type: Sequelize.STRING
+      },
+
+
       historyOfMaternalAlcoholUseAndSmoking: {
         type: Sequelize.STRING
       },
