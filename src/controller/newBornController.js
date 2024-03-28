@@ -348,7 +348,7 @@ export const updateNewBorn = async(req,res) =>{
     maternalSevereDisease,
     selectedmaternalDiseases,
     selectedhistoryOfMaternalAlcoholUseAndSmoking,
-      selectedMaternalExplosuretoOtotoxicDrugs,
+    selectedMaternalExplosuretoOtotoxicDrugs,
     historyOfMaternalAlcoholUseAndSmoking,
     maternalExplosureToOtotoxicDrugs,
     newbornPositionInTheFamily,
