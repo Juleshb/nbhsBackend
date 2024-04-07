@@ -12,7 +12,7 @@ import userRoute from "./routes/usersRoute";
 import newBoneRoute from "./routes/newBorn";
 import draftRoute from "./routes/draftRoute";
 
-import { Sequelize } from "sequelize";
+import { Sequelize, QueryTypes } from "sequelize";
 dotenv.config();
 const db = new Sequelize(process.env.DbConnection);
 const connectToDatabase = async () => {
@@ -63,19 +63,48 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-
-
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 
 // Require app to use imported routes
-app.use("/DataCollection/API",healthCentreRoute);
-app.use("/DataCollection/API",userRoute);
-app.use("/DataCollection/API",newBoneRoute);
-app.use("/DataCollection/API",draftRoute);
+app.use("/DataCollection/API", healthCentreRoute);
+app.use("/DataCollection/API", userRoute);
+app.use("/DataCollection/API", newBoneRoute);
+app.use("/DataCollection/API", draftRoute);
 
+// Export API endpoint
+app.get("/DataCollection/API/export", async (req, res) => {
+  try {
+    // Fetch table names from the database schema
+    const tableNames = await db.query(
+      "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'",
+      { type: QueryTypes.SELECT }
+    );
+
+    const allData = {};
+    // Fetch data from each table
+    for (const { table_name } of tableNames) {
+      const tableData = await db.query(`SELECT * FROM "${table_name}"`, {
+        type: QueryTypes.SELECT,
+      });
+      allData[table_name] = tableData;
+    }
+
+    // Send the data as response
+    res.status(200).json({
+      status: "success",
+      data: allData,
+    });
+  } catch (error) {
+    console.error("Error exporting data:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Failed to export data",
+    });
+  }
+});
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -87,5 +116,4 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 2300;
 app.listen(PORT, () =>{
     console.log(`Server is running on port:http://localhost:${PORT}`);
-
 });
