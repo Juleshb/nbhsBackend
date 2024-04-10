@@ -22,6 +22,6 @@ services:
   - key: DbConnection
     sync: false
   region: oregon
-  buildCommand: npm start
+  buildCommand: npm install
   startCommand: npm start
 version: "1"
