@@ -1,0 +1,27 @@
+# Exported from Render on 2024-04-10T07:01:19Z
+services:
+- type: web
+  name: nbhsBackend
+  runtime: node
+  repo: https://github.com/Juleshb/nbhsBackend
+  branch: master
+  plan: free
+  envVars:
+  - key: JWT_SECRET
+    sync: false
+  - key: EXPIREDTIME
+    sync: false
+  - key: API_SECRET
+    sync: false
+  - key: API_KEY
+    sync: false
+  - key: CLOUD_NAME
+    sync: false
+  - key: PORT
+    sync: false
+  - key: DbConnection
+    sync: false
+  region: oregon
+  buildCommand: npm start
+  startCommand: npm start
+version: "1"
