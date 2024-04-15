@@ -202,37 +202,8 @@ export const getSingleUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      pin,
-      type,
-      profile,
-      HealthCentre,
-      role,
-    } = req.body;
-    
-    if (email) {
-      const checkEmail = await User.findOne({
-        where: { email: req.body.email },
-      });
-      if (checkEmail) {
-        if (checkEmail.id != id) {
-          return res.status(400).json({
-            status: "400",
-            message: "Email Used In Our Database",
-          });
-        }
-      }
-      const verifyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!verifyEmail.test(email)) {
-        return res.status(400).json({
-          status: "400",
-          message: "Invalid Email format",
-        });
-      }
-    }
+    const { firstName, lastName, email, role } = req.body;
+
     const user = await User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({
@@ -240,70 +211,14 @@ export const updateUser = async (req, res) => {
         message: "User not found",
       });
     }
-    
-    let updatedProfile;
-    if (req.file) updatedProfile = await saveToCloud(req.file, res);
-    if (pin) {
-      const pinRegex = /^\d{4}$/;
-      if (!pinRegex.test(pin) || isConsecutiveDigits(pin)) {
-        return res.status(400).json({
-          status: "400",
-          message: "Invalid PIN. It should be 4 digits and not consecutive.",
-        });
-      }
-      const encryptPass = await bcrypt.genSalt(10);
-      const hashedPass = await bcrypt.hash(pin, encryptPass);
-      const values = {
-        firstName,
-        lastName,
-        email,
-        pin: hashedPass,
-        profile: updatedProfile?.secure_url,
-        role,
-      };
-      const userUpdate = await User.update(values, { where: { id: id } });
-      return res.status(200).json({
-        status: "200",
-        message: "User Update succeed",
-      });
-    } 
-    if(HealthCentre){
-    const findHealthCentreId = await HealthCentres.findOne({ where: { id: req.body.HealthCentre } });
-    if(!findHealthCentreId){
-      return res.status(404).json({
-        status:"404",
-        message:"HealthCentre not found",
-      })
-    }
-    const values = {
-        firstName,
-        lastName,
-        type,
-        profile: updatedProfile?.secure_url,
-        HealthCentre,
-        role,
-      };
-      const userUpdate = await User.update(values, { where: { id: id } });
-      return res.status(200).json({
-        status: "200",
-        message: "User Update succeed",
-      });
-    }
-    else {
-      if (req.file) updatedProfile = await saveToCloud(req.file, res);
-      const values = {
-        firstName,
-        lastName,
-        type,
-        profile: updatedProfile?.secure_url,
-        role,
-      };
-      const userUpdate = await User.update(values, { where: { id: id } });
-      return res.status(200).json({
-        status: "200",
-        message: "User Update succeed",
-      });
-    }
+
+    const updatedValues = { firstName, lastName, email, role };
+    const userUpdate = await User.update(updatedValues, { where: { id: id } });
+
+    return res.status(200).json({
+      status: "200",
+      message: "User updated successfully",
+    });
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
       console.error("Validation errors:", error.errors);
@@ -312,12 +227,12 @@ export const updateUser = async (req, res) => {
     }
     return res.status(500).json({
       status: "500",
-      message: "Failed to update",
+      message: "Failed to update user",
       error: error.message,
     });
-    
   }
 };
+
 
 // delete a user
 export const deleteUser = async (req, res) => {
