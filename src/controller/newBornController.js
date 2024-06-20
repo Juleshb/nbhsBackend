@@ -1,4 +1,5 @@
 import Database from "../Database/models";
+const { Op } = require('sequelize');
 const NewBorns = Database["NewBorns"];
 const Drafts = Database["Drafts"];
 const HealthCentres = Database["HealthCentres"]
@@ -252,7 +253,58 @@ export const getSingleNewBorn = async (req,res) =>{
   }
 };
 
+export const searchNewBorn = async (req, res) => {
+  try {
+    const { search } = req.query;
+    const userId = req.loggedInUser.id;
 
+    // Log the search query and user ID for debugging
+    console.log("Search Query:", search);
+    console.log("User ID:", userId);
+
+    if (!search) {
+      return res.status(400).json({
+        status: "400",
+        message: "Search parameter is required",
+      });
+    }
+
+    // Define the search criteria using Sequelize's `like` operator
+    const criteria = {
+      recordedBy: userId,
+      [Op.or]: [
+        { motherName: { [Op.like]: `%${search}%` } },
+        { fatherName: { [Op.like]: `%${search}%` } }
+      ]
+    };
+
+    // Log the constructed criteria for debugging
+    console.log("Search Criteria:", criteria);
+
+    const foundNewBorns = await NewBorns.findAll({ where: criteria });
+
+    if (!foundNewBorns || foundNewBorns.length === 0) {
+      return res.status(404).json({
+        status: "404",
+        message: "No matching newborns found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "200",
+      message: "Matching newborns retrieved successfully",
+      data: foundNewBorns,
+    });
+
+  } catch (error) {
+    console.error("Unhandled error:", error);
+    return res.status(500).json({
+      status: "500",
+      message: "Failed to retrieve newborns",
+      error: error.message,
+    });
+  }
+};
 // Getting all borns
 
 export const getNewBorns = async (req,res) =>{
@@ -402,7 +454,6 @@ export const getBornsWithOAEResultOfRefer = async (req,res) =>{
 };
 
 // getBornsWithOAEResultOfReferandABRScalenotnull 
-const { Op } = require('sequelize');
 export const getBornsWithOAEResultOfReferandABRScalenotnull = async (req,res) =>{
   const refer = "Refer";
   try {
